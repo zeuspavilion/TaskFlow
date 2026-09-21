@@ -213,11 +213,3 @@ For instant evaluation without manual registration:
 - **Email:** `demo@taskflow.io`
 - **Password:** `password123`
 
----
-
-## 📮 Submission Details
-
-- **Assignment:** Build a React Native To-Do App with User Authentication
-- **Organization:** Modulus Seventeen
-- **Submission Form:** [https://forms.gle/UZZKMsXApTA2H64J9](https://forms.gle/UZZKMsXApTA2H64J9)
-- **Contact:** `sarfarazahmedkl@modulusseventeen.com`
