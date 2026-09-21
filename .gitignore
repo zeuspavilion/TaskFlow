@@ -1,0 +1,53 @@
+# Dependencies
+node_modules/
+*/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment & Secrets
+.env
+.env.local
+.env.*.local
+*.pem
+
+# Backend Build
+backend/dist/
+
+# Android Native Build
+mobile/android/local.properties
+*/local.properties
+mobile/android/.gradle/
+mobile/android/build/
+mobile/android/app/build/
+mobile/android/.cxx/
+mobile/android/app/.cxx/
+mobile/android/app/src/main/assets/index.android.bundle
+mobile/android/app/src/main/res/drawable-*/
+mobile/android/app/src/main/res/raw/
+*.apk
+*.aab
+
+# Temporary & Local Debug Files
+mobile/autolinking.json
+mobile/lib/
+mobile/*.png
+*.log
+
+# OS Generated
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE & Editors
+.idea/
+.vscode/
+*.swp
+*.swo
+.project
+.classpath
+.settings/
