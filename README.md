@@ -1,83 +1,78 @@
-# ⚡ TaskFlow - React Native (TypeScript) & Node.js/MongoDB Full-Stack To-Do App
+# ⚡ TaskFlow - Smart Task & Priority Management
 
-A full-stack, dark-mode To-Do application for Android built with **React Native CLI (TypeScript)**, **Node.js/Express**, and **MongoDB**. Features secure JWT authentication, multi-criteria filtering, task deadline countdowns, priority classification, and a **Smart Mix Urgency Algorithm**.
-
----
-
-## 📌 Repository Analysis (Requested Evaluation)
-
-| Repository | Can We Use It in React Native? | Technical Rationale & Strategy |
-| :--- | :---: | :--- |
-| **[`unovue/inspira-ui`](https://github.com/unovue/inspira-ui)** | ❌ **No (Directly)** | Inspira UI is built for **Vue 3 / Nuxt** using browser HTML tags (`div`, `span`, CSS). React Native renders native components (`View`, `Text`). **Strategy Used**: We recreated its aesthetics natively: deep obsidian theme (`#0B0F19`), neon glowing borders, status badges, and glassmorphism-inspired cards. |
-| **[`imskyleen/animate-ui`](https://github.com/imskyleen/animate-ui)** | ❌ **No (Directly)** | Uses Web React DOM and Framer Motion. **Strategy Used**: We implemented native touch feedbacks, micro-animations, completion strikes, and smooth modal transitions. |
-| **[`darkroomengineering/lenis`](https://github.com/darkroomengineering/lenis)** | ❌ **No** | Lenis is a web browser smooth-scroller (`window.scrollTo`). React Native natively provides 60/120 FPS hardware-accelerated momentum scrolling via `FlatList` and `ScrollView`. |
+A modern, full-stack, dark-themed To-Do application built with **React Native CLI (TypeScript)**, **Node.js/Express**, and **MongoDB**. Designed with a focus on visual excellence, performance, and rich productivity features including JWT authentication, intelligent urgency ranking, multi-criteria filtering, and analytics.
 
 ---
 
-## 🚀 Key Features
+## ✨ Features Overview
 
-### 🔐 1. User Authentication & Security
-- User registration and login with email and password.
-- Password hashing with **`bcryptjs`** (salt rounds: 10).
-- Stateless **JWT (JSON Web Tokens)** session authentication.
-- Auto-login on app launch with token persistence in **`AsyncStorage`**.
-- Automatic token expiration handling and logout cleanup.
+### 🔐 1. Secure Authentication & Session Management
+- **User Registration & Login**: Validated email and password credentials with instant feedback.
+- **Secure Password Hashing**: Hashed using `bcryptjs` (10 salt rounds).
+- **Stateless JWT Authorization**: JWT-based session security with Bearer token authentication.
+- **Persistent Sessions**: Auto-restores user login states across app restarts using `@react-native-async-storage`.
+- **Demo Quick-Fill**: 1-tap demo credentials loader (`demo@taskflow.io` / `password123`) for rapid testing.
 
 ### 📝 2. Advanced Task Management (CRUD)
-- **Create**: Tasks with Title, Description, Scheduled Date-Time, Deadline Date-Time, Priority, and Category tag.
-- **Read**: Live task list with status pills, priority badges, and countdown indicators.
-- **Update**: Edit any task property or toggle completion status in 1 tap.
-- **Delete**: Soft or permanent task deletion with confirmation alert.
+- **Create**: Add tasks with **Title, Description, Scheduled Date-Time, Deadline Date-Time, Priority Level, and Category Tag**.
+- **Read & View**: Live task feed with priority color ribbons, countdown tags, and completion checkboxes.
+- **Update**: Edit any task details or toggle completion status with instant visual confirmation.
+- **Delete**: Remove tasks with confirmation alerts to prevent accidental loss.
 
-### 🧠 3. Smart Mix Sorting Algorithm (Bonus)
-In addition to standard sorting by Deadline, Priority, and Date Created, the app features an **Intelligent Urgency Ranking Engine**:
-$$\text{Urgency Score} = \text{Priority Weight} + \text{Deadline Proximity Bonus} + \text{Scheduled Alignment} - \text{Completion Penalty}$$
-- **Priority Weights**: High (+350 pts), Medium (+200 pts), Low (+100 pts).
-- **Deadline Proximity**: Overdue tasks trigger a critical alert score boost (+500 to +700 pts). Tasks due within 12h–24h scale up exponentially.
-- **Scheduled Today**: Tasks scheduled for the current day receive an active focus boost (+50 pts).
-- **Completed Tasks**: Sunk to the bottom (-10,000 pts).
+### 🧠 3. Smart Mix Urgency Algorithm (Bonus)
+In addition to standard sorting options (Deadline, Priority, Scheduled Time, and Date Created), TaskFlow includes an **Intelligent Urgency Ranking Engine**:
 
-### 🔍 4. Multi-Criteria Filtering & Search
-- **Instant Search**: Matches titles and descriptions in real time.
-- **Status Filter**: All, Pending, Completed.
-- **Priority Filter**: All, High, Medium, Low.
-- **Category Filter**: Horizontal chips (#Work, #Personal, #Study, #Health, #Urgent, + Custom Tags).
-- **Sort Selector**: Smart Mix, Nearest Deadline, Priority, Scheduled Time, Newest.
+$$\text{Urgency Score} = \text{Priority Weight} + \text{Deadline Proximity} + \text{Scheduled Alignment} - \text{Completion Penalty}$$
+
+- **Priority Weights**: High (`+350 pts`), Medium (`+200 pts`), Low (`+100 pts`).
+- **Deadline Proximity**: Overdue tasks trigger a critical alert score boost (`+500` to `+700 pts`). Tasks due within 12h–24h scale up exponentially.
+- **Scheduled Today**: Tasks scheduled for the current day receive an active focus boost (`+50 pts`).
+- **Completed Tasks**: Deprioritized to the bottom (`-10,000 pts`).
+
+### 🔍 4. Multi-Criteria Filtering & Real-Time Search
+- **Instant Search**: Real-time filtering across titles and descriptions.
+- **Status Filter**: `All`, `Pending`, `Completed`.
+- **Priority Filter**: `All`, `High`, `Medium`, `Low`.
+- **Category Tags**: Tag-based chip filtering (`#Work`, `#Personal`, `#Study`, `#Health`, `#Finance`, `#Urgent`, `#General`).
 
 ### 📊 5. Analytics & Dashboard Insights
-- Productivity progress bar with completion rate percentage ($0-100\%$).
-- Pending, Completed, Overdue, and High Priority counters.
-- Breakdown of active tasks by category and priority.
+- Productivity progress meter with live completion percentage ($0-100\%$).
+- Task counters for Pending, Completed, Overdue, and High Priority tasks.
+- Category breakdown and priority distribution charts.
+
+### 🛡️ 6. Zero-Downtime Backend Database Fallback
+- Dual database support: Connects to local/remote MongoDB instances seamlessly.
+- **Automatic In-Memory Failover**: Automatically provisions an embedded MongoDB engine with pre-seeded demo tasks if external MongoDB services are offline.
 
 ---
 
-## 🛠️ Project Structure
+## 🏗️ Architecture & Project Structure
 
 ```
-Assignment_modulus_seventeen/
+TaskFlow/
 ├── backend/
 │   ├── src/
 │   │   ├── controllers/       # authController.ts, taskController.ts
 │   │   ├── middleware/        # auth.ts (JWT verification)
 │   │   ├── models/            # User.ts, Task.ts (Mongoose schemas)
 │   │   ├── routes/            # authRoutes.ts, taskRoutes.ts
-│   │   ├── utils/             # sorting.ts (Smart Mix Algorithm)
-│   │   └── server.ts          # Express app entry & MongoDB connection
-│   ├── .env                   # Environment config
+│   │   ├── utils/             # sorting.ts (Urgency scoring logic)
+│   │   └── server.ts          # Express app entry & database connection
+│   ├── .env.example           # Environment template
 │   ├── package.json
 │   └── tsconfig.json
 │
 └── mobile/
     ├── src/
-    │   ├── api/               # client.ts (Axios + auto JWT interceptor)
-    │   ├── components/        # TaskCard, FilterBar, StatsCard, PrioritySelector, CustomDateTimePicker, etc.
+    │   ├── api/               # client.ts (Axios + auto JWT interceptor + failover)
+    │   ├── components/        # CustomButton, CustomInput, TaskCard, PriorityBadge, etc.
     │   ├── context/           # AuthContext.tsx, TaskContext.tsx
     │   ├── navigation/        # RootNavigator.tsx, AuthNavigator.tsx, TabNavigator.tsx
     │   ├── screens/           # HomeScreen, AddEditTaskScreen, TaskDetailsScreen, ProfileScreen, AnalyticsScreen
-    │   ├── theme/             # colors.ts, typography, shadows
-    │   ├── types/             # TypeScript models & navigation types
+    │   ├── theme/             # Modern obsidian dark color palette & styling tokens
+    │   ├── types/             # TypeScript data models & navigation types
     │   └── utils/             # dateUtils.ts, sorting.ts
-    ├── App.tsx                # App entry with Providers
+    ├── App.tsx                # App entry with Context Providers
     ├── index.js               # React Native CLI registry
     ├── package.json
     └── tsconfig.json
@@ -85,27 +80,58 @@ Assignment_modulus_seventeen/
 
 ---
 
-## 🚀 Setup & Execution Instructions
+## 🛠️ Technology Stack
 
-### Step 1: Run the Backend API
-1. Navigate to the backend directory:
+| Layer | Technology |
+| :--- | :--- |
+| **Mobile App** | React Native CLI (`0.76.6`), TypeScript |
+| **Navigation** | React Navigation 7 (Native Stack + Bottom Tabs) |
+| **Local Storage** | `@react-native-async-storage/async-storage` |
+| **Backend API** | Node.js, Express 5, TypeScript |
+| **Database** | MongoDB, Mongoose, `mongodb-memory-server` (failover) |
+| **Authentication** | JSON Web Tokens (`jsonwebtoken`), `bcryptjs` |
+| **Network Client** | Axios (with auto JWT interceptor & USB/Wi-Fi auto-fallback) |
+
+---
+
+## 🚀 Getting Started
+
+### 1. Prerequisites
+- **Node.js** (v18 or higher)
+- **Java JDK** (JDK 17 recommended)
+- **Android Studio & SDK** (Android SDK Platform 34+, Android SDK Build-Tools)
+
+---
+
+### 2. Backend Setup & Run
+
+1. Navigate to the `backend` directory:
    ```bash
    cd backend
    ```
-2. Start MongoDB locally (or ensure your MongoDB Atlas URI is set in `backend/.env`).
-3. Start the TypeScript development server:
+2. Install dependencies:
    ```bash
-   npm run dev
+   npm install
    ```
-4. The server runs at `http://localhost:5000`. You can verify health at:
+3. Create your `.env` file (or use default configuration):
+   ```bash
+   cp .env.example .env
+   ```
+4. Build and start the server:
+   ```bash
+   npm run build
+   npm start
+   ```
+5. The server will run on `http://0.0.0.0:5000`. You can test health at:
    ```
    GET http://localhost:5000/api/health
    ```
 
 ---
 
-### Step 2: Run the Mobile Application (Android)
-1. Navigate to the mobile directory:
+### 3. Mobile App Setup & Run (Android)
+
+1. Navigate to the `mobile` directory:
    ```bash
    cd mobile
    ```
@@ -113,36 +139,42 @@ Assignment_modulus_seventeen/
    ```bash
    npm install
    ```
-3. Start the Metro Bundler:
+3. Connect your Android device via USB (with USB Debugging enabled) or start an Android Emulator.
+4. Set up port forwarding (for physical devices over USB):
    ```bash
-   npm start
+   adb reverse tcp:5000 tcp:5000
+   adb reverse tcp:8081 tcp:8081
    ```
-4. Run on Android Emulator or connected USB device:
+5. Build and run the app on Android:
    ```bash
    npm run android
    ```
 
-> **Network Note for Android:**
-> - Android Emulator connects to localhost via `http://10.0.2.2:5000/api` (already configured as default).
-> - For a physical Android phone on the same Wi-Fi, open the **Account / Settings** tab in the app to configure your computer's local IP (e.g., `http://192.168.1.5:5000/api`).
+---
+
+## 📡 API Reference
+
+### 🔐 Authentication (`/api/auth`)
+| Method | Endpoint | Description | Auth Required |
+| :--- | :--- | :--- | :---: |
+| `POST` | `/api/auth/register` | Register a new user account | No |
+| `POST` | `/api/auth/login` | Log in and receive JWT token | No |
+| `GET` | `/api/auth/me` | Fetch active user profile | **Yes (Bearer Token)** |
+
+### 📋 Tasks (`/api/tasks`)
+| Method | Endpoint | Description | Auth Required |
+| :--- | :--- | :--- | :---: |
+| `GET` | `/api/tasks` | Get filtered & sorted tasks list | **Yes (Bearer Token)** |
+| `POST` | `/api/tasks` | Create a new task | **Yes (Bearer Token)** |
+| `GET` | `/api/tasks/stats` | Retrieve productivity dashboard statistics | **Yes (Bearer Token)** |
+| `GET` | `/api/tasks/:id` | Get details of a single task | **Yes (Bearer Token)** |
+| `PUT` | `/api/tasks/:id` | Update task fields or toggle completion | **Yes (Bearer Token)** |
+| `DELETE` | `/api/tasks/:id` | Delete a task | **Yes (Bearer Token)** |
 
 ---
 
-## 📡 API Endpoints Reference
+## 👤 Default Demo Credentials
 
-### Authentication (`/api/auth`)
-| Method | Endpoint | Description | Auth Required |
-| :--- | :--- | :--- | :---: |
-| `POST` | `/api/auth/register` | Register new user account | No |
-| `POST` | `/api/auth/login` | Login and receive JWT token | No |
-| `GET` | `/api/auth/me` | Fetch active user profile | **Yes (Bearer)** |
-
-### Tasks (`/api/tasks`)
-| Method | Endpoint | Description | Auth Required |
-| :--- | :--- | :--- | :---: |
-| `GET` | `/api/tasks` | Get filtered & sorted tasks | **Yes (Bearer)** |
-| `POST` | `/api/tasks` | Create new task | **Yes (Bearer)** |
-| `GET` | `/api/tasks/stats` | Get productivity dashboard metrics | **Yes (Bearer)** |
-| `GET` | `/api/tasks/:id` | Get single task details | **Yes (Bearer)** |
-| `PUT` | `/api/tasks/:id` | Update task or toggle completion | **Yes (Bearer)** |
-| `DELETE` | `/api/tasks/:id` | Delete a task | **Yes (Bearer)** |
+For quick evaluation without manual registration, you can use:
+- **Email:** `demo@taskflow.io`
+- **Password:** `password123`
