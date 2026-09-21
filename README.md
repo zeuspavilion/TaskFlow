@@ -94,6 +94,104 @@ $$\text{Urgency Score} = \text{Priority Weight} + \text{Deadline Urgency} + \tex
 
 ---
 
+## 📐 System Architecture & Data Flow
+
+TaskFlow is structured around a decoupled, three-tier full-stack mobile architecture designed for high responsiveness, offline session durability, and zero-downtime database resiliency:
+
+```mermaid
+graph TD
+    subgraph Client ["📱 Client Tier (React Native CLI · Android)"]
+        UI["UI Layer<br/>HomeScreen · AddEditTask · Analytics · Profile"]
+        Context["State Management<br/>AuthContext · TaskContext"]
+        Storage["Persistent Storage<br/>@react-native-async-storage"]
+        AxiosClient["Network Client (Axios)<br/>Auto-JWT Interceptor & Failover"]
+        UI --> Context
+        Context <--> Storage
+        Context --> AxiosClient
+    end
+
+    subgraph Network ["🌐 Network Bridge"]
+        USB["USB Port Forwarding<br/>(adb reverse tcp:5000)"]
+        WiFi["Local Wi-Fi Network<br/>(192.168.1.x:5000)"]
+        AxiosClient -->|Primary Route| USB
+        AxiosClient -.->|Auto Fallback| WiFi
+    end
+
+    subgraph Backend ["⚙️ Backend Tier (Node.js · Express 5 · TypeScript)"]
+        Server["Express HTTP Server (Port 5000)"]
+        AuthMiddleware["Auth Middleware<br/>(JWT Token Verification)"]
+        Controllers["Controllers<br/>authController.ts · taskController.ts"]
+        Models["Mongoose Data Models<br/>User Schema · Task Schema"]
+        
+        USB --> Server
+        WiFi --> Server
+        Server --> AuthMiddleware
+        AuthMiddleware --> Controllers
+        Controllers --> Models
+    end
+
+    subgraph Database ["🗄️ Database Tier (High-Availability Hybrid)"]
+        PrimaryDB[("Primary MongoDB<br/>(Standalone / Atlas)")]
+        MemoryDB[("In-Memory MongoDB<br/>(Embedded Failover Engine)")]
+        
+        Models -->|Default Connection| PrimaryDB
+        Models -.->|Fallback if Offline| MemoryDB
+    end
+
+    classDef client fill:#1e293b,stroke:#6366f1,stroke-width:2px,color:#fff;
+    classDef network fill:#0f172a,stroke:#38bdf8,stroke-width:1px,color:#fff;
+    classDef backend fill:#1e293b,stroke:#10b981,stroke-width:2px,color:#fff;
+    classDef database fill:#1e293b,stroke:#f59e0b,stroke-width:2px,color:#fff;
+
+    class UI,Context,Storage,AxiosClient client;
+    class USB,WiFi network;
+    class Server,AuthMiddleware,Controllers,Models backend;
+    class PrimaryDB,MemoryDB database;
+```
+
+---
+
+### 🧠 Smart Mix Urgency Algorithm Flowchart
+
+```mermaid
+flowchart LR
+    Task([New / Updated Task]) --> PriorityCheck{Priority Weight}
+    PriorityCheck -->|High| P1["+350 pts"]
+    PriorityCheck -->|Medium| P2["+200 pts"]
+    PriorityCheck -->|Low| P3["+100 pts"]
+
+    Task --> DeadlineCheck{Deadline Status}
+    DeadlineCheck -->|Overdue| D1["+500 to +700 pts<br/>(Critical Warning)"]
+    DeadlineCheck -->|Due ≤ 12h| D2["+300 pts Exponential"]
+    DeadlineCheck -->|Due ≤ 24h| D3["+200 pts"]
+    DeadlineCheck -->|Due > 24h| D4["Standard Decay"]
+
+    Task --> ScheduleCheck{Scheduled For Today?}
+    ScheduleCheck -->|Yes| S1["+50 pts Focus Boost"]
+    ScheduleCheck -->|No| S2["0 pts"]
+
+    P1 & P2 & P3 & D1 & D2 & D3 & D4 & S1 & S2 --> Aggregator["Score Calculation Engine<br/>Score = Priority + Deadline + Schedule"]
+    
+    Aggregator --> CompletionCheck{Is Completed?}
+    CompletionCheck -->|Yes| CompleteSink["-10,000 pts<br/>(Sink to Bottom)"]
+    CompletionCheck -->|No| FinalRank["Ranked Urgency Score"]
+
+    CompleteSink --> OutputList([Live Sorted Task Feed])
+    FinalRank --> OutputList
+
+    classDef calc fill:#1e293b,stroke:#6366f1,stroke-width:1.5px,color:#fff;
+    classDef boost fill:#064e3b,stroke:#10b981,stroke-width:1.5px,color:#fff;
+    classDef alert fill:#7f1d1d,stroke:#ef4444,stroke-width:1.5px,color:#fff;
+    classDef sink fill:#374151,stroke:#9ca3af,stroke-width:1px,color:#fff;
+
+    class PriorityCheck,DeadlineCheck,ScheduleCheck,Aggregator,CompletionCheck calc;
+    class P1,P2,P3,D2,D3,D4,S1,FinalRank boost;
+    class D1 alert;
+    class CompleteSink,S2 sink;
+```
+
+---
+
 ## 📁 Repository Structure
 
 ```
