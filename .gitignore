@@ -26,6 +26,7 @@ mobile/android/app/src/main/assets/index.android.bundle
 mobile/android/app/src/main/res/drawable-*/
 mobile/android/app/src/main/res/raw/
 *.apk
+start-demo.bat
 *.aab
 
 # Temporary & Local Debug Files
